@@ -1,0 +1,23 @@
+#!/usr/bin/bash
+#$1: template file path
+#$2: params file path
+#$3 output file path
+#removeUnusedKeys() {
+    echo tuankhanh
+    keysTemplate=$(cat ${1} $1 | jq 'keys[]')
+    keysParams=$(cat ${1} $2 | jq 'keys[]')
+
+    fileContent=$(cat $2)
+    result=''
+    for key in ${keysParams}; do
+      #echo ${key}
+      if [[ ! ${keysTemplate[*]} =~ (^|[[:space:]])"${key}"($|[[:space:]]) ]]; then
+       echo ${key}
+       result=$(echo $fileContent | jq "del(.${key})" | jq ".")
+      fi
+    done
+    echo $result > $3
+#}
+
+#removeUnusedKeys template.json test.json out.json
+
